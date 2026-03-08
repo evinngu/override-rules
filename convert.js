@@ -105,7 +105,8 @@ const PROXY_GROUPS = {
     MANUAL: "手动选择",
     FALLBACK: "故障转移",
     DIRECT: "直连",
-    LANDING: "落地节点",
+    LANDING_WARP: "落地节点-WARP",
+    LANDING_NORMAL: "落地节点-普通",
     LOW_COST: "低倍率节点",
 };
 
@@ -123,7 +124,8 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames }) {
      */
     const defaultSelector = buildList(
         PROXY_GROUPS.FALLBACK,
-        landing && PROXY_GROUPS.LANDING,
+        landing && PROXY_GROUPS.LANDING_WARP,
+        landing && PROXY_GROUPS.LANDING_NORMAL,
         countryGroupNames,
         lowCost && PROXY_GROUPS.LOW_COST,
         PROXY_GROUPS.MANUAL,
@@ -153,11 +155,10 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames }) {
     );
 
     /**
-     * "故障转移"组的候选列表：落地节点（可选）→ 各国家组 → 低倍率（可选）→ 手动 → 直连。
+     * "故障转移"组的候选列表：各国家组 → 低倍率（可选）→ 手动 → 直连。
      * 不包含"选择代理"自身，避免循环引用。
      */
     const defaultFallback = buildList(
-        landing && PROXY_GROUPS.LANDING,
         countryGroupNames,
         lowCost && PROXY_GROUPS.LOW_COST,
         PROXY_GROUPS.MANUAL,
@@ -469,9 +470,15 @@ function parseLowCost(config) {
         .map((proxy) => proxy.name);
 }
 
-function parseLandingNodes(config) {
+function parseLandingNodesWarp(config) {
     return (config.proxies || [])
-        .filter((proxy) => LANDING_REGEX.test(proxy.name))
+        .filter((proxy) => LANDING_REGEX.test(proxy.name) && proxy.type === "wireguard")
+        .map((proxy) => proxy.name);
+}
+
+function parseLandingNodesNormal(config) {
+    return (config.proxies || [])
+        .filter((proxy) => LANDING_REGEX.test(proxy.name) && proxy.type !== "wireguard")
         .map((proxy) => proxy.name);
 }
 
@@ -590,7 +597,8 @@ function buildProxyGroups({
     countries,
     countryProxyGroups,
     lowCostNodes,
-    landingNodes,
+    landingNodesWarp,
+    landingNodesNormal,
     defaultProxies,
     defaultProxiesDirect,
     defaultSelector,
@@ -611,7 +619,7 @@ function buildProxyGroups({
      */
     const frontProxySelector = landing
         ? defaultSelector.filter(
-              (name) => name !== PROXY_GROUPS.LANDING && name !== PROXY_GROUPS.FALLBACK
+              (name) => name !== PROXY_GROUPS.LANDING_WARP && name !== PROXY_GROUPS.LANDING_NORMAL && name !== PROXY_GROUPS.FALLBACK
           )
         : [];
 
@@ -630,7 +638,7 @@ function buildProxyGroups({
         },
         landing
             ? {
-                  name: "前置代理",
+                  name: "前置代理-WARP",
                   icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Area.png",
                   type: "select",
                   /**
@@ -649,16 +657,37 @@ function buildProxyGroups({
             : null,
         landing
             ? {
-                  name: PROXY_GROUPS.LANDING,
-                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png",
+                  name: "前置代理-普通",
+                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Area.png",
                   type: "select",
                   /**
-                   * regex 模式：`include-all` + `filter` 动态筛选落地节点。
-                   * 枚举模式：直接列出已识别的落地节点名称。
+                   * regex 模式：`include-all` 拉取所有节点，`exclude-filter` 排除落地节点，
+                   * 同时在 `proxies` 里附加手动指定的候选组名列表（各国家组等）。
+                   * 枚举模式：直接列出候选组名（落地节点已在构建 `frontProxySelector` 时过滤）。
                    */
                   ...(regexFilter
-                      ? { "include-all": true, filter: LANDING_PATTERN }
-                      : { proxies: landingNodes }),
+                      ? {
+                            "include-all": true,
+                            "exclude-filter": LANDING_PATTERN,
+                            proxies: frontProxySelector,
+                        }
+                      : { proxies: frontProxySelector }),
+              }
+            : null,
+        landing
+            ? {
+                  name: PROXY_GROUPS.LANDING_WARP,
+                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png",
+                  type: "select",
+                  proxies: landingNodesWarp,
+              }
+            : null,
+        landing
+            ? {
+                  name: PROXY_GROUPS.LANDING_NORMAL,
+                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png",
+                  type: "select",
+                  proxies: landingNodesNormal,
               }
             : null,
         {
@@ -823,7 +852,8 @@ function main(config) {
      */
     const countryInfo = parseCountries(resultConfig);
     const lowCostNodes = parseLowCost(resultConfig);
-    const landingNodes = landing ? parseLandingNodes(resultConfig) : [];
+    const landingNodesWarp = landing ? parseLandingNodesWarp(resultConfig) : [];
+    const landingNodesNormal = landing ? parseLandingNodesNormal(resultConfig) : [];
     const countryGroupNames = getCountryGroupNames(countryInfo, countryThreshold);
     const countries = stripNodeSuffix(countryGroupNames);
 
@@ -852,7 +882,8 @@ function main(config) {
         countries,
         countryProxyGroups,
         lowCostNodes,
-        landingNodes,
+        landingNodesWarp,
+        landingNodesNormal,
         defaultProxies,
         defaultProxiesDirect,
         defaultSelector,
