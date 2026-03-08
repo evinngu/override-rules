@@ -619,8 +619,8 @@ function buildProxyGroups({
      */
     const frontProxySelector = landing
         ? defaultSelector.filter(
-              (name) => name !== PROXY_GROUPS.LANDING_WARP && name !== PROXY_GROUPS.LANDING_NORMAL && name !== PROXY_GROUPS.FALLBACK
-          )
+            (name) => name !== PROXY_GROUPS.LANDING_WARP && name !== PROXY_GROUPS.LANDING_NORMAL && name !== PROXY_GROUPS.FALLBACK
+        )
         : [];
 
     return [
@@ -638,57 +638,57 @@ function buildProxyGroups({
         },
         landing
             ? {
-                  name: "前置代理-WARP",
-                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Area.png",
-                  type: "select",
-                  /**
-                   * regex 模式：`include-all` 拉取所有节点，`exclude-filter` 排除落地节点，
-                   * 同时在 `proxies` 里附加手动指定的候选组名列表（各国家组等）。
-                   * 枚举模式：直接列出候选组名（落地节点已在构建 `frontProxySelector` 时过滤）。
-                   */
-                  ...(regexFilter
-                      ? {
-                            "include-all": true,
-                            "exclude-filter": LANDING_PATTERN,
-                            proxies: frontProxySelector,
-                        }
-                      : { proxies: frontProxySelector }),
-              }
+                name: "前置代理-WARP",
+                icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Area.png",
+                type: "select",
+                /**
+                 * regex 模式：`include-all` 拉取所有节点，`exclude-filter` 排除落地节点，
+                 * 同时在 `proxies` 里附加手动指定的候选组名列表（各国家组等）。
+                 * 枚举模式：直接列出候选组名（落地节点已在构建 `frontProxySelector` 时过滤）。
+                 */
+                ...(regexFilter
+                    ? {
+                        "include-all": true,
+                        "exclude-filter": LANDING_PATTERN,
+                        proxies: frontProxySelector,
+                    }
+                    : { proxies: frontProxySelector }),
+            }
             : null,
         landing
             ? {
-                  name: "前置代理-普通",
-                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Area.png",
-                  type: "select",
-                  /**
-                   * regex 模式：`include-all` 拉取所有节点，`exclude-filter` 排除落地节点，
-                   * 同时在 `proxies` 里附加手动指定的候选组名列表（各国家组等）。
-                   * 枚举模式：直接列出候选组名（落地节点已在构建 `frontProxySelector` 时过滤）。
-                   */
-                  ...(regexFilter
-                      ? {
-                            "include-all": true,
-                            "exclude-filter": LANDING_PATTERN,
-                            proxies: frontProxySelector,
-                        }
-                      : { proxies: frontProxySelector }),
-              }
+                name: PROXY_GROUPS.LANDING_WARP,
+                icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png",
+                type: "select",
+                proxies: landingNodesWarp,
+            }
             : null,
         landing
             ? {
-                  name: PROXY_GROUPS.LANDING_WARP,
-                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png",
-                  type: "select",
-                  proxies: landingNodesWarp,
-              }
+                name: "前置代理-普通",
+                icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Area.png",
+                type: "select",
+                /**
+                 * regex 模式：`include-all` 拉取所有节点，`exclude-filter` 排除落地节点，
+                 * 同时在 `proxies` 里附加手动指定的候选组名列表（各国家组等）。
+                 * 枚举模式：直接列出候选组名（落地节点已在构建 `frontProxySelector` 时过滤）。
+                 */
+                ...(regexFilter
+                    ? {
+                        "include-all": true,
+                        "exclude-filter": LANDING_PATTERN,
+                        proxies: frontProxySelector,
+                    }
+                    : { proxies: frontProxySelector }),
+            }
             : null,
         landing
             ? {
-                  name: PROXY_GROUPS.LANDING_NORMAL,
-                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png",
-                  type: "select",
-                  proxies: landingNodesNormal,
-              }
+                name: PROXY_GROUPS.LANDING_NORMAL,
+                icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png",
+                type: "select",
+                proxies: landingNodesNormal,
+            }
             : null,
         {
             name: PROXY_GROUPS.FALLBACK,
@@ -829,14 +829,14 @@ function buildProxyGroups({
         },
         lowCostNodes.length > 0 || regexFilter
             ? {
-                  name: PROXY_GROUPS.LOW_COST,
-                  icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Lab.png",
-                  type: "url-test",
-                  url: "https://cp.cloudflare.com/generate_204",
-                  ...(!regexFilter
-                      ? { proxies: lowCostNodes }
-                      : { "include-all": true, filter: "(?i)0\\.[0-5]|低倍率|省流|大流量|实验性" }),
-              }
+                name: PROXY_GROUPS.LOW_COST,
+                icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Lab.png",
+                type: "url-test",
+                url: "https://cp.cloudflare.com/generate_204",
+                ...(!regexFilter
+                    ? { proxies: lowCostNodes }
+                    : { "include-all": true, filter: "(?i)0\\.[0-5]|低倍率|省流|大流量|实验性" }),
+            }
             : null,
         ...countryProxyGroups,
     ].filter(Boolean);
