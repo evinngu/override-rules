@@ -659,8 +659,12 @@ function buildProxyGroups({
             ? {
                 name: PROXY_GROUPS.LANDING_WARP,
                 icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png",
-                type: "select",
+                type: "fallback",
+                url: "https://cp.cloudflare.com/generate_204",
                 proxies: landingNodesWarp,
+                interval: 180,
+                tolerance: 20,
+                lazy: false,
             }
             : null,
         landing
