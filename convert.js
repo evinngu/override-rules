@@ -165,7 +165,17 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames }) {
         "DIRECT"
     );
 
-    return { defaultProxies, defaultProxiesDirect, defaultSelector, defaultFallback };
+    const defaultProxiesWithLanding = buildList(
+        PROXY_GROUPS.SELECT,
+        landing && PROXY_GROUPS.LANDING_WARP,
+        landing && PROXY_GROUPS.LANDING_NORMAL,
+        countryGroupNames,
+        lowCost && PROXY_GROUPS.LOW_COST,
+        PROXY_GROUPS.MANUAL,
+        PROXY_GROUPS.DIRECT
+    );
+
+    return { defaultProxies, defaultProxiesDirect, defaultSelector, defaultFallback, defaultProxiesWithLanding };
 }
 
 const ruleProviders = {
@@ -603,6 +613,7 @@ function buildProxyGroups({
     defaultProxiesDirect,
     defaultSelector,
     defaultFallback,
+    defaultProxiesWithLanding,
 }) {
     /**
      * 预先判断是否存在特定地区的节点，用于为 Bilibili、Bahamut、Truth Social 等
@@ -714,7 +725,7 @@ function buildProxyGroups({
             name: "AI",
             icon: "https://gcore.jsdelivr.net/gh/powerfullz/override-rules@master/icons/chatgpt.png",
             type: "select",
-            proxies: defaultProxies,
+            proxies: defaultProxiesWithLanding,
         },
         {
             name: "Crypto",
@@ -726,7 +737,7 @@ function buildProxyGroups({
             name: "Google",
             icon: "https://gcore.jsdelivr.net/gh/powerfullz/override-rules@master/icons/Google.png",
             type: "select",
-            proxies: defaultProxies,
+            proxies: defaultProxiesWithLanding,
         },
         {
             name: "Microsoft",
@@ -738,7 +749,7 @@ function buildProxyGroups({
             name: "YouTube",
             icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png",
             type: "select",
-            proxies: defaultProxies,
+            proxies: defaultProxiesWithLanding,
         },
         {
             name: "Bilibili",
@@ -761,7 +772,7 @@ function buildProxyGroups({
             name: "Netflix",
             icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Netflix.png",
             type: "select",
-            proxies: defaultProxies,
+            proxies: defaultProxiesWithLanding,
         },
         {
             name: "TikTok",
@@ -864,7 +875,7 @@ function main(config) {
     /**
      * 构建各类通用候选列表，供后续策略组复用。
      */
-    const { defaultProxies, defaultProxiesDirect, defaultSelector, defaultFallback } =
+    const { defaultProxies, defaultProxiesDirect, defaultSelector, defaultFallback, defaultProxiesWithLanding } =
         buildBaseLists({ landing, lowCostNodes, countryGroupNames });
 
     /**
@@ -892,6 +903,7 @@ function main(config) {
         defaultProxiesDirect,
         defaultSelector,
         defaultFallback,
+        defaultProxiesWithLanding,
     });
 
     /**
