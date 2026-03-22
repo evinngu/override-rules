@@ -778,7 +778,7 @@ function buildProxyGroups({
             name: "TikTok",
             icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png",
             type: "select",
-            proxies: defaultProxies,
+            proxies: defaultProxiesWithLanding,
         },
         {
             name: "Spotify",
