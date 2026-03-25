@@ -858,7 +858,7 @@ function buildProxyGroups({
 }
 
 // eslint-disable-next-line no-unused-vars -- 通过 vm.runInContext 在 yaml_generator 中被调用
-function main(config) {
+async function main(config) {
     const resultConfig = { proxies: config.proxies };
 
     /**
@@ -942,6 +942,32 @@ function main(config) {
                 "store-selected": true,
             },
         });
+
+    let customRulesRaw = "";
+    try {
+        if (typeof produceArtifact !== "undefined") {
+            customRulesRaw = await produceArtifact({
+                type: "file",
+                name: "custom_rules.yaml"
+            });
+        }
+        if (customRulesRaw) {
+            const yamlParser = typeof yaml !== 'undefined' ? yaml : (typeof YAML !== 'undefined' ? YAML : null);
+            if (yamlParser) {
+                const customConfig = yamlParser.parse(customRulesRaw);
+                if (customConfig && typeof customConfig === "object") {
+                    if (customConfig["rule-providers"] && typeof customConfig["rule-providers"] === "object") {
+                        Object.assign(ruleProviders, customConfig["rule-providers"]);
+                    }
+                    if (customConfig.rules && Array.isArray(customConfig.rules) && customConfig.rules.length > 0) {
+                        finalRules.unshift(...customConfig.rules);
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        // 忽略解析错误
+    }
 
     Object.assign(resultConfig, {
         "proxy-groups": proxyGroups,
