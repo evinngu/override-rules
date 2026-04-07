@@ -981,6 +981,22 @@ async function main(config) {
                                 finalDns["nameserver-policy"] = { ...customPolicy, ...finalDns["nameserver-policy"] };
                             }
                         }
+
+                        const customFakeIpFilter = customConfig.dns["fake-ip-filter"];
+                        if (customFakeIpFilter && Array.isArray(customFakeIpFilter) && customFakeIpFilter.length > 0) {
+                            if (!finalDns["fake-ip-filter"]) {
+                                const entries = Object.entries(finalDns);
+                                const proxyServerNsIndex = entries.findIndex(([k]) => k === "proxy-server-nameserver");
+                                if (proxyServerNsIndex !== -1) {
+                                    entries.splice(proxyServerNsIndex + 1, 0, ["fake-ip-filter", customFakeIpFilter]);
+                                    finalDns = Object.fromEntries(entries);
+                                } else {
+                                    finalDns["fake-ip-filter"] = customFakeIpFilter;
+                                }
+                            } else {
+                                finalDns["fake-ip-filter"] = [...customFakeIpFilter, ...finalDns["fake-ip-filter"]];
+                            }
+                        }
                     }
                 }
             }
