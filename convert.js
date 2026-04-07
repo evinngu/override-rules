@@ -943,6 +943,8 @@ async function main(config) {
             },
         });
 
+    let finalDns = fakeIPEnabled ? dnsConfigFakeIp : dnsConfig;
+
     let customRulesRaw = "";
     try {
         if (typeof produceArtifact !== "undefined") {
@@ -962,6 +964,24 @@ async function main(config) {
                     if (customConfig.rules && Array.isArray(customConfig.rules) && customConfig.rules.length > 0) {
                         finalRules.unshift(...customConfig.rules);
                     }
+                    if (customConfig.dns && typeof customConfig.dns === "object") {
+                        const customPolicy = customConfig.dns["nameserver-policy"];
+                        // 只兼容规范的对象格式写法
+                        if (customPolicy && typeof customPolicy === "object" && !Array.isArray(customPolicy)) {
+                            if (!finalDns["nameserver-policy"]) {
+                                const entries = Object.entries(finalDns);
+                                const defaultIndex = entries.findIndex(([k]) => k === "default-nameserver");
+                                if (defaultIndex !== -1) {
+                                    entries.splice(defaultIndex + 1, 0, ["nameserver-policy", customPolicy]);
+                                    finalDns = Object.fromEntries(entries);
+                                } else {
+                                    finalDns["nameserver-policy"] = customPolicy;
+                                }
+                            } else {
+                                finalDns["nameserver-policy"] = { ...customPolicy, ...finalDns["nameserver-policy"] };
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -974,7 +994,7 @@ async function main(config) {
         "rule-providers": ruleProviders,
         rules: finalRules,
         sniffer: snifferConfig,
-        dns: fakeIPEnabled ? dnsConfigFakeIp : dnsConfig,
+        dns: finalDns,
         "geodata-mode": true,
         "geox-url": geoxURL,
     });
