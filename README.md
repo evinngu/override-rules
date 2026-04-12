@@ -1,5 +1,7 @@
 ## powerfullz 的 Mihomo/Substore 覆写规则
 
+[![](https://data.jsdelivr.com/v1/package/gh/powerfullz/override-rules/badge)](https://www.jsdelivr.com/package/gh/powerfullz/override-rules)
+
 本仓库为 Mihomo/Substore 设计，提供高效、灵活的覆写规则（**不建议用于 Stash**）。核心特色如下：
 
 * 集成 [SukkaW/Surge](https://github.com/SukkaW/Surge) 与 [217heidai/adblockfilters](https://github.com/217heidai/adblockfilters) 等优质规则，兼容性强，覆盖面广。
@@ -31,7 +33,7 @@
 
 **Clash Party/Sparkle**
 
-1.  推荐直接使用 JS 动态覆写：`https://gcore.jsdelivr.net/gh/powerfullz/override-rules@refs/heads/main/convert.min.js`
+1.  推荐直接使用 JS 动态覆写：`https://gcore.jsdelivr.net/gh/powerfullz/override-rules@1/convert.min.js`
 2.  打开 Clash Party → 左侧「覆写」→ 粘贴上述链接导入。
 3.  打开「订阅管理」→ 目标订阅右上角三个点 → 「编辑信息」→ 选择该覆写脚本 → 保存。
 4.  Clash Party 不支持给脚本传入参数，如果需要传入参数，请使用集成的 Substore。
@@ -45,10 +47,10 @@
 2025/06/17 更新：新增 JavaScript 格式覆写，支持传入参数，更易于维护，已经成为首选方式。例如，有链式代理需求，使用如下覆写脚本链接即可：
 
 ```
-https://gcore.jsdelivr.net/gh/powerfullz/override-rules@refs/heads/main/convert.min.js#landing=true
+https://gcore.jsdelivr.net/gh/powerfullz/override-rules@1/convert.min.js#landing=true
 ```
 
-或者直接使用`raw.githubusercontent.com`原始链接：
+如果想要第一时间体验新加入的 ~~Bug~~ 功能，可以直接使用`raw.githubusercontent.com`原始链接：
 
 ```
 https://raw.githubusercontent.com/powerfullz/override-rules/refs/heads/main/convert.min.js
@@ -99,9 +101,7 @@ https://raw.githubusercontent.com/powerfullz/override-rules/refs/heads/main/conv
 
 ~~**Steam 修复**： 这代理组用于让 Steam 客户端调用国内 CDN 及 P2P 网络下载，节省大量流量。如果需要代理 Steam 所有的下载请求，将其设置为「节点选择」即可。~~
 
-~~Play 商店修复和 Steam 修复代理组已经默认直连，又省流量又快，Why not?~~
-
-Google Play 的国内 CDN 似乎已经失效，目前已经直接代理`services.googleapis.cn`，Steam 依然可以使用国内 CDN 和 P2P 下载。
+Play 商店修复和 Steam 修复代理组已经默认直连，又省流量又快，Why not?
 
 ### 关于链式代理的说明
 
