@@ -423,7 +423,6 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames }) {
 
     /**
      * 大多数策略组的通用候选列表：以"选择代理"为首选，再跟落地节点（可选）、各国家组、低倍率、手动、直连。
-     * 将"落地节点"前置，方便 AI / 静态资源 等功能组直接下钻选择具体落地节点，无需绕道"手动选择"。
      */
     const defaultProxies = buildList(
         PROXY_GROUPS.SELECT,
@@ -439,6 +438,7 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames }) {
      */
     const defaultProxiesDirect = buildList(
         PROXY_GROUPS.DIRECT,
+        landing && PROXY_GROUPS.LANDING,
         countryGroupNames,
         lowCost && PROXY_GROUPS.LOW_COST,
         PROXY_GROUPS.SELECT,
