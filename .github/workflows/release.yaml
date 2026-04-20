@@ -136,8 +136,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          curl -fsSI "https://purge.jsdelivr.net/gh/${{ github.repository }}/convert.min.js"
-          curl -fsSI "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/convert.min.js"
+          curl -fsS "https://purge.jsdelivr.net/gh/${{ github.repository }}/convert.min.js"
+          curl -fsS "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/convert.min.js"
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v3
