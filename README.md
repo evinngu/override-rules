@@ -36,8 +36,7 @@
 > [!TIP]
 > Clash Party 不支持给脚本传入参数，如果需要传入参数，请使用集成的 Substore。
 
-1.  推荐直接使用 JS 动态覆写（最新）：`https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/convert.min.js`
-  如需固定版本，可改为：`https://gcore.jsdelivr.net/gh/powerfullz/override-rules@vX.Y.Z/convert.min.js`
+1.  推荐直接使用 JS 动态覆写：`https://cdn.jsdelivr.net/gh/powerfullz/override-rules/convert.min.js`
 2.  打开 Clash Party → 左侧「覆写」→ 粘贴上述链接导入。
 3.  打开「订阅管理」→ 目标订阅右上角三个点 → 「编辑信息」→ 选择该覆写脚本 → 保存。
 
@@ -78,19 +77,19 @@
 无特殊需求，直接在 Substore 「脚本操作」处填入脚本链接：
 
 ```
-https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/convert.min.js
+https://cdn.jsdelivr.net/gh/powerfullz/override-rules/convert.min.js
 ```
 
 有链式代理和多个节点提供商之间负载均衡的需求，使用`landing=true&loadbalance=true`两个参数：
 
 ```
-https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/convert.min.js#landing=true&loadbalance=true
+https://cdn.jsdelivr.net/gh/powerfullz/override-rules/convert.min.js#landing=true&loadbalance=true
 ```
 
-如果想固定到某个发布版本（例如 `v0.1.0`），可直接使用 jsdelivr 对应 Tag 的链接：
+如果想第一时间体验最新加入的 ~~Bug~~ 功能，可以使用 preview 分支的 Github Raw 链接：
 
 ```
-https://gcore.jsdelivr.net/gh/powerfullz/override-rules@v0.1.0/convert.min.js
+https://raw.githubusercontent.com/powerfullz/override-rules/refs/heads/preview/convert.min.js
 ```
 
 ### 关于各 Mihomo 客户端覆盖 GeoIP/GeoSite 下载地址的说明
@@ -99,10 +98,10 @@ https://gcore.jsdelivr.net/gh/powerfullz/override-rules@v0.1.0/convert.min.js
 
 | 项目 | 链接 |
 | :--- | :--- |
-| GeoIP 数据库 | `https://gcore.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat` |
-| GeoSite 数据库 | `https://gcore.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat` |
-| MMDB 数据库 | `https://gcore.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb` |
-| ASN 数据库 | `https://gcore.jsdelivr.net/gh/Loyalsoldier/geoip@release/GeoLite2-ASN.mmdb` |
+| GeoIP 数据库 | `https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat` |
+| GeoSite 数据库 | `https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat` |
+| MMDB 数据库 | `https://cdn.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb` |
+| ASN 数据库 | `https://cdn.jsdelivr.net/gh/Loyalsoldier/geoip@release/GeoLite2-ASN.mmdb` |
 
 ### 关于部分特殊代理组的说明
 
@@ -137,11 +136,11 @@ proxies:
 
 > [!NOTE]
 > 为了保持代码仓库的纯净，`main` 主分支不再跟踪和提交生成的产物文件（如 `convert.js` 和 `yamls/`）。
-> 这些构建产物目前统一由 Github Actions 的 Release 工作流在发布 `v*` 版本时，构建并自动推送到 `dist` 分支下。
+> 这些构建产物目前统一由 Github Actions 的 Release 工作流在发布 `v*` 版本时，构建并自动推送到当前分支及 Release 中。
 
 获取 YAML 覆写文件的链接格式如下：
 
-- **最新正式版**：`@dist/yamls/*.yaml`
+- **最新正式版**：`/yamls/*.yaml` (默认主分支或不带分支名)
 - **特定历史版本**：`@vX.Y.Z/yamls/*.yaml`
 
 文件命名规则依据支持的开关参数穷举，格式如下：
@@ -152,15 +151,15 @@ config_lb-{0|1}_landing-{0|1}_ipv6-{0|1}_full-{0|1}_keepalive-{0|1}_fakeip-{0|1}
 
 **获取示例（开启 full，其余关闭）：**
 ```text
-https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
+https://cdn.jsdelivr.net/gh/powerfullz/override-rules/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
 ```
 
 **固定版本获取示例：**
 ```text
-https://gcore.jsdelivr.net/gh/powerfullz/override-rules@v0.1.0/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
+https://cdn.jsdelivr.net/gh/powerfullz/override-rules@v0.1.0/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
 ```
 
-如果使用加速镜像：
+如果使用镜像：
 ```text
 https://git.l3zc.com/powerfullz/override-rules/raw/branch/dist/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
 ```
