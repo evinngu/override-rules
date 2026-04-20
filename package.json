@@ -6,7 +6,11 @@
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
-    "generate": "node yaml_generator/generator.js",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && esbuild src/main.ts --bundle --platform=neutral --format=iife --target=es2020 --outfile=convert.js --legal-comments=none --banner:js='/*! powerfullz 的 Substore 订阅转换脚本 | https://github.com/powerfullz/override-rules */'",
+    "generate": "tsx yaml_generator/generator.ts",
+    "minify": "npm run typecheck && esbuild src/main.ts --bundle --platform=neutral --format=iife --target=es2020 --minify --outfile=convert.min.js --legal-comments=none --banner:js='/*! powerfullz 的 Substore 订阅转换脚本 | https://github.com/powerfullz/override-rules */'",
+    "artifacts": "npm run build && npm run minify && npm run generate",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -16,9 +20,14 @@
     "yaml": "^2.5.0"
   },
   "devDependencies": {
+    "@types/node": "^24.7.2",
     "@eslint/js": "^10.0.1",
+    "esbuild": "^0.25.12",
     "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "terser": "^5.44.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
   }
 }
