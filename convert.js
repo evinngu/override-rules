@@ -10,8 +10,8 @@ https://github.com/powerfullz/override-rules
 - keepalive: 启用 tcp-keep-alive（默认 false）
 - fakeip: DNS 使用 FakeIP 模式（默认 true，false 为 RedirHost）
 - quic: 允许 QUIC 流量（UDP 443，默认 false）
-- threshold: 国家节点数量小于该值时不显示分组 (默认 0)
-- regex: 使用正则过滤模式（include-all + filter）写入各国家代理组，而非直接枚举节点名称（默认 false）
+- threshold: 地区节点数量小于该值时不显示分组 (默认 0)
+- regex: 使用正则过滤模式（include-all + filter）写入各地区代理组，而非直接枚举节点名称（默认 false）
 */
 
 const NODE_SUFFIX = "节点";
@@ -424,7 +424,7 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames, nonLandingNo
     const lowCost = lowCostNodes.length > 0 || regexFilter;
 
     /**
-     * "选择代理"组的顶层候选列表：自动选择 → 故障转移 → 落地节点（可选）→ 各国家组 → 低倍率（可选）→ 手动 → 直连。
+     * "选择代理"组的顶层候选列表：自动选择 → 故障转移 → 落地节点（可选）→ 各地区组 → 低倍率（可选）→ 手动 → 直连。
      */
     const defaultSelector = buildList(
         PROXY_GROUPS.AUTO,
@@ -437,7 +437,7 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames, nonLandingNo
     );
 
     /**
-     * 大多数策略组的通用候选列表：以"选择代理"为首选，再跟落地节点（可选）、各国家组、低倍率、手动、直连。
+     * 大多数策略组的通用候选列表：以"选择代理"为首选，再跟落地节点（可选）、各地区组、低倍率、手动、直连。
      */
     const defaultProxies = buildList(
         PROXY_GROUPS.SELECT,
@@ -461,7 +461,7 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames, nonLandingNo
     );
 
     /**
-     * "故障转移"和"自动选择"组的候选列表：落地节点（可选）→ 各国家组 → 低倍率（可选）→ 手动 → 直连。
+     * "故障转移"和"自动选择"组的候选列表：落地节点（可选）→ 各地区组 → 低倍率（可选）→ 手动 → 直连。
      * 不包含"选择代理"自身，避免循环引用。
      */
     const defaultFallback = buildList(
@@ -473,7 +473,7 @@ function buildBaseLists({ landing, lowCostNodes, countryGroupNames, nonLandingNo
     );
 
     /**
-     * "前置代理"候选列表：优先国家节点组、DIRECT
+     * "前置代理"候选列表：优先地区节点组、DIRECT
      * 再拼接所有非落地节点名称枚举
      */
     const frontProxySelector = buildList(
@@ -701,7 +701,7 @@ function buildProxyGroups({
                   type: "select",
                   /**
                    * regex 模式：`include-all` 拉取所有节点，`exclude-filter` 排除落地节点，
-                   * 同时在 `proxies` 里附加手动指定的候选组名列表（各国家组等）。
+                   * 同时在 `proxies` 里附加手动指定的候选组名列表（各地区组等）。
                    * 枚举模式：直接列出候选组名（落地节点已在构建 `frontProxySelector` 时过滤）。
                    */
                   ...(regexFilter
@@ -895,7 +895,7 @@ function main(config) {
 
     /**
      * 解析订阅中的节点，分别得到：地区归类信息、低倍率节点名列表、落地节点名列表，
-     * 以及经过阈值过滤和权重排序后的国家组名列表与地区名列表。
+     * 以及经过阈值过滤和权重排序后的地区组名列表与地区名列表。
      */
     const countryInfo = parseCountries(resultConfig);
     const lowCostNodes = parseLowCost(resultConfig);
@@ -929,7 +929,7 @@ function main(config) {
     });
 
     /**
-     * 组装所有策略组（功能组 + 地区组）。
+     * 组装所有策略组（功能组、地区组）。
      */
     const proxyGroups = buildProxyGroups({
         landing,
