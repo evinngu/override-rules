@@ -36,8 +36,8 @@
 > [!TIP]
 > Clash Party 不支持给脚本传入参数，如果需要传入参数，请使用集成的 Substore。
 
-1.  推荐直接使用 JS 动态覆写（最新）：`https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/latest/convert.min.js`
-  如需固定版本，可改为：`https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/vX.Y.Z/convert.min.js`
+1.  推荐直接使用 JS 动态覆写（最新）：`https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/convert.min.js`
+  如需固定版本，可改为：`https://gcore.jsdelivr.net/gh/powerfullz/override-rules@vX.Y.Z/convert.min.js`
 2.  打开 Clash Party → 左侧「覆写」→ 粘贴上述链接导入。
 3.  打开「订阅管理」→ 目标订阅右上角三个点 → 「编辑信息」→ 选择该覆写脚本 → 保存。
 
@@ -78,19 +78,19 @@
 无特殊需求，直接在 Substore 「脚本操作」处填入脚本链接：
 
 ```
-https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/latest/convert.min.js
+https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/convert.min.js
 ```
 
 有链式代理和多个节点提供商之间负载均衡的需求，使用`landing=true&loadbalance=true`两个参数：
 
 ```
-https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/latest/convert.min.js#landing=true&loadbalance=true
+https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/convert.min.js#landing=true&loadbalance=true
 ```
 
-如果想固定到某个发布版本（例如 `v0.1.0`），可直接使用 `raw.githubusercontent.com` 的 `dist` 分支版本目录：
+如果想固定到某个发布版本（例如 `v0.1.0`），可直接使用 jsdelivr 对应 Tag 的链接：
 
 ```
-https://raw.githubusercontent.com/powerfullz/override-rules/refs/heads/dist/v0.1.0/convert.min.js
+https://gcore.jsdelivr.net/gh/powerfullz/override-rules@v0.1.0/convert.min.js
 ```
 
 ### 关于各 Mihomo 客户端覆盖 GeoIP/GeoSite 下载地址的说明
@@ -141,8 +141,8 @@ proxies:
 
 获取 YAML 覆写文件的链接格式如下：
 
-- **最新正式版**：`dist/latest/yamls/*.yaml`
-- **特定历史版本**：`dist/vX.Y.Z/yamls/*.yaml`
+- **最新正式版**：`@dist/yamls/*.yaml`
+- **特定历史版本**：`@vX.Y.Z/yamls/*.yaml`
 
 文件命名规则依据支持的开关参数穷举，格式如下：
 
@@ -152,17 +152,17 @@ config_lb-{0|1}_landing-{0|1}_ipv6-{0|1}_full-{0|1}_keepalive-{0|1}_fakeip-{0|1}
 
 **获取示例（开启 full，其余关闭）：**
 ```text
-https://raw.githubusercontent.com/powerfullz/override-rules/refs/heads/dist/latest/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
+https://gcore.jsdelivr.net/gh/powerfullz/override-rules@dist/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
 ```
 
 **固定版本获取示例：**
 ```text
-https://raw.githubusercontent.com/powerfullz/override-rules/refs/heads/dist/v0.1.0/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
+https://gcore.jsdelivr.net/gh/powerfullz/override-rules@v0.1.0/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
 ```
 
 如果使用加速镜像：
 ```text
-https://git.l3zc.com/powerfullz/override-rules/raw/branch/dist/latest/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
+https://git.l3zc.com/powerfullz/override-rules/raw/branch/dist/yamls/config_lb-0_landing-0_ipv6-0_full-1_keepalive-0_fakeip-0_quic-0.yaml
 ```
 
 *注：CI 仅套用了一份虚拟的 `fake_proxies.json` 来模拟生成 YAML，因此它无法像 JS 动态脚本那样根据你的实际节点智能生成专属分组策略，只能保守地包含常用的国家/地区。为了最高效的分流体验，仍强烈推荐使用 JS 覆写。*
@@ -185,8 +185,7 @@ https://git.l3zc.com/powerfullz/override-rules/raw/branch/dist/latest/yamls/conf
 项目中封装了便捷的 NPM Scripts 帮助你测试代码：
 
 ```shell
-npm run build      # 仅构建未压缩的 convert.js 脚本
-npm run minify     # 使用 esbuild 直接由 TS 源文件构建最终的 convert.min.js
+npm run build      # 编译 TS 代码并输出为主文件及压缩后的 min.js 产物
 npm run generate   # 根据源码生成全量的 yamls/ 覆写选项
 npm run artifacts  # 完整执行上述全部生成流
 ```

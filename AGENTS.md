@@ -8,14 +8,13 @@
   - `src/main.ts`：JS 动态覆写脚本的核心入口。
   - `yaml_generator/generator.ts`：YAML 静态覆写文件的生成逻辑。
 - **禁止直接修改产物**：根目录下的 `convert.js`、`convert.min.js` 以及 `yamls/` 目录的内容属于自动生成的构建产物（注意：它们已被 `main` 分支取消 Git 跟踪）。**永远不要直接编辑这些产物文件**。一切修改必须在 `.ts` 源码中进行。
-- **构建工具链**：我们使用 `esbuild` 作为打包和压缩工具，无需通过 `terser` 等工具中转。可以直接通过 TypeScript 编译出最终的 Minify 产物。
+- **构建工具链**：我们使用 `esbuild` 作为打包和压缩工具，可以通过编写的 `build.ts` 脚本一次性地编译出包含了完整注释的产物文件。
 
 ## 🛠️ 开发与构建工作流
 
 在修改源代码后，执行以下命令以验证更改并生成本地对应的产物文件：
 
-- `npm run build`: 使用 esbuild 快速将 `src/main.ts` 编译打包为 `convert.js`。
-- `npm run minify`: 直接将 TypeScript 代码构建为经过强力压缩的 `convert.min.js` 脚本文件。
+- `npm run build`: 运行 `build.ts` 脚本，同时编译生成未压缩的 `convert.js` 与经过强力压缩的 `convert.min.js`，并在顶部注入开源版权声明。
 - `npm run generate`: 运行 YAML 覆写配置生成器，更新 `yamls/` 目录内的排列组合文件。
 - `npm run artifacts`: 一键依次执行上述所有构建与生成阶段。
 
