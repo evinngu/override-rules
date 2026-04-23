@@ -1,18 +1,14 @@
-import {
-    CDN_URL,
-    LANDING_PATTERN,
-    LOW_COST_FILTER,
-    LOW_COST_GROUP_PATTERN,
-    NODE_SUFFIX,
-    PROXY_GROUPS,
-    countriesMeta,
-} from "./constants";
+import { CDN_URL, NODE_SUFFIX, PROXY_GROUPS, countriesMeta } from "./constants";
 import type {
     BuildCountryProxyGroupsInput,
     BuildProxyGroupsInput,
     CountryInfoItem,
     ProxyGroup,
 } from "./types";
+
+const LOW_COST_FILTER = "0\\.[0-5]|低倍率|省流|实验性";
+const LOW_COST_GROUP_PATTERN = "(?i)0\\.[0-5]|低倍率|省流|实验性";
+const LANDING_PATTERN = "(?i)家宽|家庭宽带|商宽|商业宽带|星链|Starlink|落地";
 
 export function buildCountryProxyGroups({
     countries,

@@ -72,9 +72,3 @@ export interface BuildProxyGroupsInput {
     defaultFallback: string[];
     frontProxySelector: string[];
 }
-
-export interface BuildDnsConfigInput {
-    mode: "redir-host" | "fake-ip";
-    ipv6Enabled: boolean;
-    fakeIpFilter?: string[];
-}

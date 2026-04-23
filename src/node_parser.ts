@@ -1,5 +1,8 @@
-import { LANDING_REGEX, LOW_COST_REGEX, NODE_SUFFIX, countriesMeta } from "./constants";
+import { NODE_SUFFIX, countriesMeta } from "./constants";
 import type { ClashConfig, CountryInfoItem } from "./types";
+
+const LOW_COST_REGEX = /0\.[0-5]|低倍率|省流|实验性/i;
+const LANDING_REGEX = /家宽|家庭宽带|商宽|商业宽带|星链|Starlink|落地/i;
 
 const COUNTRY_REGEX_MAP = Object.fromEntries(
     Object.entries(countriesMeta).map(([country, meta]) => {

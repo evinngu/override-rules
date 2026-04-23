@@ -1,6 +1,40 @@
-import type { BuildDnsConfigInput } from "./types";
+const FAKE_IP_FILTER = [
+    "geosite:private",
+    "geosite:connectivity-check",
+    "geosite:cn",
+    "Mijia Cloud",
+    "dig.io.mi.com",
+    "localhost.ptlogin2.qq.com",
+    "*.icloud.com",
+    "*.stun.*.*",
+    "*.stun.*.*.*",
+];
 
-export function buildDnsConfig({
+export const snifferConfig = {
+    sniff: {
+        TLS: {
+            ports: [443, 8443],
+        },
+        HTTP: {
+            ports: [80, 8080, 8880],
+        },
+        QUIC: {
+            ports: [443, 8443],
+        },
+    },
+    "override-destination": false,
+    enable: true,
+    "force-dns-mapping": true,
+    "skip-domain": ["Mijia Cloud", "dlg.io.mi.com", "+.push.apple.com"],
+};
+
+interface BuildDnsConfigInput {
+    mode: "redir-host" | "fake-ip";
+    ipv6Enabled: boolean;
+    fakeIpFilter?: string[];
+}
+
+function buildDnsConfig({
     mode,
     ipv6Enabled,
     fakeIpFilter,
@@ -27,4 +61,16 @@ export function buildDnsConfig({
     }
 
     return config;
+}
+
+export interface BuildDnsInput {
+    fakeIPEnabled: boolean;
+    ipv6Enabled: boolean;
+}
+
+export function buildDns({ fakeIPEnabled, ipv6Enabled }: BuildDnsInput): Record<string, unknown> {
+    if (fakeIPEnabled) {
+        return buildDnsConfig({ mode: "fake-ip", ipv6Enabled, fakeIpFilter: FAKE_IP_FILTER });
+    }
+    return buildDnsConfig({ mode: "redir-host", ipv6Enabled });
 }

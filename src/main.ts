@@ -17,14 +17,7 @@ https://github.com/powerfullz/override-rules
 - 源码已迁移至 `src/*.ts` 文件，使用 TypeScript 编写，编译后输出到 `dist/*.js`。
 */
 
-import {
-    CDN_URL,
-    FAKE_IP_FILTER,
-    geoxURL,
-    PROXY_GROUPS,
-    ruleProviders,
-    snifferConfig,
-} from "./constants";
+import { CDN_URL, PROXY_GROUPS } from "./constants";
 import { buildFeatureFlags } from "./args";
 import { buildCountryProxyGroups, buildProxyGroups } from "./proxy_groups";
 import {
@@ -33,11 +26,19 @@ import {
     parseLowCost,
     parseNodesByLanding,
     stripNodeSuffix,
-} from "./proxy_parser";
+} from "./node_parser";
 import { buildRules } from "./rules";
-import { buildDnsConfig } from "./dns";
+import { ruleProviders } from "./rule_providers";
+import { buildDns, snifferConfig } from "./dns";
 import { buildBaseLists } from "./selectors";
 import type { ClashConfig, ScriptArgs } from "./types";
+
+const geoxURL = {
+    geoip: `${CDN_URL}/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat`,
+    geosite: `${CDN_URL}/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat`,
+    mmdb: `${CDN_URL}/gh/Loyalsoldier/geoip@release/Country.mmdb`,
+    asn: `${CDN_URL}/gh/Loyalsoldier/geoip@release/GeoLite2-ASN.mmdb`,
+};
 
 declare const $arguments: ScriptArgs;
 
@@ -145,22 +146,12 @@ function main(config: ClashConfig): ClashConfig {
         });
     }
 
-    const dnsConfig = buildDnsConfig({
-        mode: "redir-host",
-        ipv6Enabled,
-    });
-    const dnsConfigFakeIp = buildDnsConfig({
-        mode: "fake-ip",
-        ipv6Enabled,
-        fakeIpFilter: FAKE_IP_FILTER,
-    });
-
     Object.assign(resultConfig, {
         "proxy-groups": proxyGroups,
         "rule-providers": ruleProviders,
         rules: finalRules,
         sniffer: snifferConfig,
-        dns: fakeIPEnabled ? dnsConfigFakeIp : dnsConfig,
+        dns: buildDns({ fakeIPEnabled, ipv6Enabled }),
         "geodata-mode": true,
         "geox-url": geoxURL,
     });

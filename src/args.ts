@@ -1,6 +1,16 @@
-import { FEATURE_FLAG_DEFAULTS } from "./constants";
 import { parseBool, parseNumber } from "./utils";
 import type { FeatureFlags, ScriptArgs } from "./types";
+
+const FEATURE_FLAG_DEFAULTS = {
+    loadBalance: false,
+    landing: false,
+    ipv6Enabled: false,
+    fullConfig: false,
+    keepAliveEnabled: false,
+    fakeIPEnabled: true,
+    quicEnabled: false,
+    regexFilter: false,
+} as const;
 
 type FlagSpec = Record<string, keyof Omit<FeatureFlags, "countryThreshold">>;
 
