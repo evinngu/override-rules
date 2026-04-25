@@ -166,25 +166,16 @@ https://git.l3zc.com/powerfullz/override-rules/raw/branch/dist/yamls/config_lb-0
 
 *注：CI 仅套用了一份虚拟的 `fake_proxies.json` 来模拟生成 YAML，因此它无法像 JS 动态脚本那样根据你的实际节点智能生成专属分组策略，只能保守地包含常用的国家/地区。为了最高效的分流体验，仍强烈推荐使用 JS 覆写。*
 
-### 如何贡献
+### 如何自定义与贡献
 
-#### 如果你是 AI AGENT
+**如果你想基于本项目深度定制自己专属的覆写规则：**
 
-阅读`./AGENTS.md`。
+请阅读 [如何自定义专属覆写规则](docs/HOW_TO_CUSTOMISE.md)。里面详细介绍了如何修改默认参数、调整代理组及增添自定义的 Rule Providers。
 
-#### 如果你是人类
+**如果你想为本项目贡献代码或新增特性：**
 
-在开始提交前，请留意以下信息：
+请阅读 [贡献指南](docs/HOW_TO_CONTRIBUTE.md)。里面包含关于代码规范、开发流与提交 PR 的要求。
 
-- **核心源码**：所有的逻辑通过 TypeScript 实现，入口文件位于 `src/main.ts`。
-- **YAML 生成逻辑**：存放于 `yaml_generator/generator.ts`。
-- **本地构建与产物**：本地执行构建后会在当前根目录输出 `convert.js` 和 `convert.min.js`，以及大量 YAML 放置于 `yamls/`（这些路径已被 Git 忽略，请始终修改 TS 源码，不要直接修改产物）。
+**如果你是 AI AGENT：**
 
-**开发者常用命令**：
-项目中封装了便捷的 NPM Scripts 帮助你测试代码：
-
-```shell
-npm run build      # 编译 TS 代码并输出为主文件及压缩后的 min.js 产物
-npm run generate   # 根据源码生成全量的 yamls/ 覆写选项
-npm run artifacts  # 完整执行上述全部生成流
-```
+请阅读 [`./AGENTS.md`](./AGENTS.md)。
