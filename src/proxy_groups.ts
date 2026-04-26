@@ -13,6 +13,16 @@ import type {
     ProxyGroup,
 } from "./types";
 
+/**
+ * 为每个地区生成对应的代理组配置。
+ * @param input - 构建地区代理组所需的输入参数
+ * @param input.countries - 需要生成代理组的地区名称列表（不含后缀）
+ * @param input.landing - 是否启用落地节点模式；启用时将排除落地节点
+ * @param input.loadBalance - 是否使用负载均衡模式（`load-balance`），否则使用自动测速（`url-test`）
+ * @param input.regexFilter - 是否使用正则过滤模式（`include-all` + `filter`）
+ * @param input.countryInfo - 地区节点信息数组，用于非正则模式下直接枚举节点名称
+ * @returns 生成的地区代理组配置数组
+ */
 export function buildCountryProxyGroups({
     countries,
     landing,
