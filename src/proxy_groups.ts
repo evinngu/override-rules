@@ -120,7 +120,7 @@ export function buildProxyGroups({
         },
         {
             name: PROXY_GROUPS.AI_SERVICE,
-            icon: `${CDN_URL}/gh/powerfullz/override-rules@master/icons/chatgpt.png`,
+            icon: `${CDN_URL}/gh/Koolson/Qure@master/IconSet/Color/ChatGPT.png`,
             type: "select",
             proxies: defaultProxies,
         },
