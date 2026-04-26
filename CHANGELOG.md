@@ -1,3 +1,15 @@
+# [2.1.0](https://github.com/powerfullz/override-rules/compare/src-v2.0.16...src-v2.1.0) (2026-04-26)
+
+
+### Bug Fixes
+
+* correct icon link for porn proxy group ([3817607](https://github.com/powerfullz/override-rules/commit/3817607f5c71a53ab2ea80242b2691af0987329a))
+
+
+### Features
+
+* add 6 new countries ([9e91b51](https://github.com/powerfullz/override-rules/commit/9e91b51dbbb21e711073b611e1a428f58da7fe91))
+* 添加新的代理组和规则，包括微博、Twitter、成人内容和影音娱乐 ([49f1b4b](https://github.com/powerfullz/override-rules/commit/49f1b4bfbdadafdf23f7b72774053ff05e895704))
 ## [2.0.16](https://github.com/powerfullz/override-rules/compare/src-v2.0.15...src-v2.0.16) (2026-04-26)
 ## [2.0.15](https://github.com/powerfullz/override-rules/compare/src-v2.0.4...src-v2.0.15) (2026-04-26)
 
