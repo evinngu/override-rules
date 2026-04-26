@@ -213,7 +213,7 @@ export function buildProxyGroups({
         },
         {
             name: PROXY_GROUPS.TRUTH_SOCIAL,
-            icon: `${CDN_URL}/gh/powerfullz/override-rules@master/icons/TruthSocial.png`,
+            icon: `${CDN_URL}/gh/powerfullz/override-rules@master/icons/Truth_Social.png`,
             type: "select",
             proxies: hasUS
                 ? ["美国节点", PROXY_GROUPS.SELECT, PROXY_GROUPS.MANUAL]
