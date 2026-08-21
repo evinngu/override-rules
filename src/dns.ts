@@ -123,6 +123,7 @@ interface BuildDnsConfigInput {
     fakeIpFilter?: string[];
 }
 
+/** 支持与上游配置合并的 DNS 字符串列表字段。 */
 const DNS_LIST_FIELDS = [
     "default-nameserver",
     "nameserver",
@@ -131,18 +132,22 @@ const DNS_LIST_FIELDS = [
     "direct-nameserver",
 ] as const;
 
+/** 支持从上游配置继承的 DNS Policy 字段。 */
 const DNS_POLICY_FIELDS = ["nameserver-policy", "proxy-server-nameserver-policy"] as const;
 
+/** 判断值是否为非数组对象。 */
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/** 读取仅包含字符串的数组，过滤格式错误的上游字段。 */
 function getStringList(value: unknown): string[] | undefined {
     return Array.isArray(value) && value.every((item) => typeof item === "string")
         ? value
         : undefined;
 }
 
+/** 合并两个字符串列表并移除重复值，保留当前配置的优先顺序。 */
 function mergeStringLists(current: string[] | undefined, upstream: unknown): string[] | undefined {
     const upstreamList = getStringList(upstream);
     if (!current && !upstreamList) return undefined;
@@ -150,12 +155,14 @@ function mergeStringLists(current: string[] | undefined, upstream: unknown): str
     return [...new Set([...(current ?? []), ...(upstreamList ?? [])])];
 }
 
+/** 判断 DNS 服务器地址是否指向本机监听地址。 */
 function isLocalDnsServer(value: string): boolean {
     return /^(?:(?:udp|tcp|tls|https?|quic):\/\/)?(?:localhost|127(?:\.\d{1,3}){3}|0\.0\.0\.0|::1|\[::1\])(?::\d+)?(?:\/|$)/i.test(
         value
     );
 }
 
+/** 合并 DNS Policy，仅保留 Mihomo 支持的字符串或字符串数组值。 */
 function mergeDnsPolicies(
     current: Record<string, DnsPolicyValue> | undefined,
     upstream: unknown
@@ -174,6 +181,7 @@ function mergeDnsPolicies(
     return { ...(current ?? {}), ...upstreamPolicy };
 }
 
+/** 继承允许的上游 DNS 字段，同时保留脚本控制字段的优先级。 */
 function inheritDnsFields(generated: DnsConfig, upstream?: DnsConfig): DnsConfig {
     if (!isRecord(upstream)) return generated;
 
@@ -265,6 +273,7 @@ function buildDnsConfig({ mode, ipv6Enabled, fakeIpFilter }: BuildDnsConfigInput
 export interface BuildDnsInput {
     fakeIPEnabled: boolean;
     ipv6Enabled: boolean;
+    /** 上游订阅提供的 DNS 配置，将按字段规则继承或融合。 */
     upstreamDns?: DnsConfig;
 }
 
@@ -273,6 +282,7 @@ export interface BuildDnsInput {
  * @param {BuildDnsInput} params - 构建参数
  * @param {boolean} params.fakeIPEnabled - 是否启用 fake-ip 模式
  * @param {boolean} params.ipv6Enabled - 是否启用 IPv6
+ * @param {DnsConfig} params.upstreamDns - 上游 DNS 配置（可选）
  * @returns {DnsConfig} DNS 配置对象
  */
 export function buildDns({ fakeIPEnabled, ipv6Enabled, upstreamDns }: BuildDnsInput): DnsConfig {
