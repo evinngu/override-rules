@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.7.1](https://github.com/powerfullz/override-rules/compare/src-v2.7.0...src-v2.7.1) (2026-08-21)
+
+
+### Bug Fixes
+
+- Remove unused `PROXY_GROUPS.SSH` constant ([b48d845](https://github.com/powerfullz/override-rules/commit/b48d84510b5325062aab7cab433a9c8d4d7d4105))
+- Merge upstream DNS configuration ([5764bf4](https://github.com/powerfullz/override-rules/commit/5764bf4541b8a1de1a2b29c6ce61781b082e6ebb))
+
+
+### Documentation
+
+- 补充 JSDocs ([a2e5d8f](https://github.com/powerfullz/override-rules/commit/a2e5d8faec297ae1a47967b6d20f74fd78efb1f8))
 ## [2.7.0](https://github.com/powerfullz/override-rules/compare/src-v2.6.0...src-v2.7.0) (2026-08-20)
 
 
