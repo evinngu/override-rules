@@ -123,6 +123,7 @@ function main(config: ClashConfig): ClashConfig {
 
     return {
         proxies: config.proxies,
+        ...(config.hosts !== undefined && { hosts: config.hosts }),
         ...(fullConfig && {
             "mixed-port": 7890,
             "redir-port": 7892,
