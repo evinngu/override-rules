@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.2](https://github.com/powerfullz/override-rules/compare/src-v2.7.1...src-v2.7.2) (2026-08-21)
+
+
+### Bug Fixes
+
+- 继承原配置的`hosts`字段 ([ae276fc](https://github.com/powerfullz/override-rules/commit/ae276fcf3825c9b437360a1738bac1fdd80fb69f))
 ## [2.7.1](https://github.com/powerfullz/override-rules/compare/src-v2.7.0...src-v2.7.1) (2026-08-21)
 
 
