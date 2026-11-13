@@ -21,7 +21,7 @@ https://github.com/powerfullz/override-rules
 源码位于 `src/`，入口为 `src/main.ts`。
 
 [定制] evinngu/override-rules dist-custom 分支：
-- 落地节点仅加入「选择代理」及 加密货币、金融服务、AI服务、谷歌服务、Youtube、Netflix、TikTok 策略组
+- 落地节点仅加入「选择代理」及 加密货币、金融服务（直连优先）、AI服务、谷歌服务、Youtube、Netflix、TikTok 策略组
 - 前置代理-WARP / 前置代理-普通 = 「选择代理」候选列表去掉落地组
 - 读取 Sub-Store 文件 `custom_rules.yaml`，合并 rule-providers、前置 rules，
   并合并 dns.nameserver-policy / dns.fake-ip-filter / dns.proxy-server-nameserver
@@ -520,6 +520,12 @@ https://github.com/powerfullz/override-rules
         flattenedNodeSource,
         hasLowCost && PROXY_GROUPS.LOW_COST
       ),
+      defaultProxiesDirectWithLanding: buildList(
+        "DIRECT",
+        landingGroups,
+        flattenedNodeSource,
+        hasLowCost && PROXY_GROUPS.LOW_COST
+      ),
       defaultFallback,
       frontProxySelector
     };
@@ -558,6 +564,14 @@ https://github.com/powerfullz/override-rules
       ),
       defaultProxiesDirect: buildList(
         "DIRECT",
+        suffixedCountryNames,
+        hasLowCost && PROXY_GROUPS.LOW_COST,
+        PROXY_GROUPS.SELECT,
+        PROXY_GROUPS.MANUAL
+      ),
+      defaultProxiesDirectWithLanding: buildList(
+        "DIRECT",
+        landingGroups,
         suffixedCountryNames,
         hasLowCost && PROXY_GROUPS.LOW_COST,
         PROXY_GROUPS.SELECT,
@@ -1214,7 +1228,7 @@ https://github.com/powerfullz/override-rules
         {
           name: PROXY_GROUPS.FINANCE,
           icon: ICONS.finance,
-          proxies: (ctx) => ctx.lists.defaultProxiesWithLanding
+          proxies: (ctx) => ctx.lists.defaultProxiesDirectWithLanding
         },
         {
           name: PROXY_GROUPS.APPLE,
