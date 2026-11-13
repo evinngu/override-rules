@@ -22,6 +22,7 @@ https://github.com/powerfullz/override-rules
 
 [定制] evinngu/override-rules dist-custom 分支：
 - 落地节点仅加入「选择代理」及 AI服务、谷歌服务、Youtube、Netflix、TikTok 策略组
+- 前置代理-WARP / 前置代理-普通 = 「选择代理」候选列表去掉落地组
 - 读取 Sub-Store 文件 `custom_rules.yaml`，合并 rule-providers、前置 rules，
   并合并 dns.nameserver-policy / dns.fake-ip-filter / dns.proxy-server-nameserver
 */
@@ -491,8 +492,7 @@ https://github.com/powerfullz/override-rules
   function buildFlattenedBaseLists({
     landingGroups,
     hasLowCost,
-    flattenedNodeSource,
-    flattenedNodes
+    flattenedNodeSource
   }) {
     const defaultSelector = buildList(
       landingGroups,
@@ -501,10 +501,7 @@ https://github.com/powerfullz/override-rules
       "DIRECT"
     );
     const defaultFallback = buildList(flattenedNodeSource);
-    const frontProxySelector = buildList(
-      "DIRECT",
-      flattenedNodes.map((node) => node.name).filter(Boolean)
-    );
+    const frontProxySelector = defaultSelector.filter((candidate) => !landingGroups.includes(candidate));
     return {
       defaultSelector,
       defaultProxies: buildList(
@@ -529,25 +526,21 @@ https://github.com/powerfullz/override-rules
   }
   function buildGroupedBaseLists({
     landingGroups,
-    regexFilter,
     hasLowCost,
-    suffixedCountryNames,
-    tailscaleNodes,
-    nonLandingNodes
+    suffixedCountryNames
   }) {
-    const tailscaleNames = new Set(tailscaleNodes.map((node) => node.name).filter(Boolean));
-    const frontProxyNames = nonLandingNodes.filter((node) => !tailscaleNames.has(node.name)).map((node) => node.name).filter(Boolean);
     const defaultFallback = buildList(suffixedCountryNames);
+    const defaultSelector = buildList(
+      PROXY_GROUPS.AUTO,
+      PROXY_GROUPS.FALLBACK,
+      landingGroups,
+      suffixedCountryNames,
+      hasLowCost && PROXY_GROUPS.LOW_COST,
+      PROXY_GROUPS.MANUAL,
+      "DIRECT"
+    );
     return {
-      defaultSelector: buildList(
-        PROXY_GROUPS.AUTO,
-        PROXY_GROUPS.FALLBACK,
-        landingGroups,
-        suffixedCountryNames,
-        hasLowCost && PROXY_GROUPS.LOW_COST,
-        PROXY_GROUPS.MANUAL,
-        "DIRECT"
-      ),
+      defaultSelector,
       defaultProxies: buildList(
         PROXY_GROUPS.SELECT,
         suffixedCountryNames,
@@ -571,11 +564,7 @@ https://github.com/powerfullz/override-rules
         PROXY_GROUPS.MANUAL
       ),
       defaultFallback,
-      frontProxySelector: buildList(
-        suffixedCountryNames,
-        "DIRECT",
-        !regexFilter && frontProxyNames
-      )
+      frontProxySelector: defaultSelector.filter((candidate) => !landingGroups.includes(candidate))
     };
   }
   function buildBaseLists({
@@ -583,7 +572,6 @@ https://github.com/powerfullz/override-rules
     landingNormal,
     landingNodes,
     lowCostNodes,
-    nonLandingNodes,
     tailscaleNodes,
     regexFilter,
     regions
@@ -603,17 +591,13 @@ https://github.com/powerfullz/override-rules
           landingNodes,
           tailscaleNodes,
           regexFilter
-        ),
-        flattenedNodes: regions.flattenedNodes
+        )
       });
     }
     return buildGroupedBaseLists({
       landingGroups,
-      regexFilter,
       hasLowCost,
-      suffixedCountryNames,
-      tailscaleNodes,
-      nonLandingNodes
+      suffixedCountryNames
     });
   }
   var init_selectors = __esm({
@@ -1637,7 +1621,6 @@ https://github.com/powerfullz/override-rules
           landingNormal: nodes.landingNormal,
           landingNodes: nodes.landingNodes,
           lowCostNodes: nodes.lowCostNodes,
-          nonLandingNodes: nodes.nonLandingNodes,
           tailscaleNodes: nodes.tailscaleNodes,
           regexFilter: flags.regexFilter,
           regions: nodes.regionLayout
